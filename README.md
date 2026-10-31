@@ -14,6 +14,36 @@ Client-server chat applications are software systems that enable real-time commu
 •	Clients are users or devices that connect to the server to participate in the chat.
 •	Each client has a unique identity, often represented by a username.
 •	Clients interact with the server to send and receive messages.
+```
+
+import socket
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+client.connect(('localhost', 12345))
+
+print("Connected to Server")
+
+while True:
+    message = input("Client: ")
+
+    client.send(message.encode())
+
+    if message.lower() == "exit":
+        break
+
+    reply = client.recv(1024).decode()
+
+    if reply.lower() == "exit":
+        print("Server Disconnected")
+        break
+
+    print("Server:", reply)
+
+client.close()
+```
+
+
 ## 2. Communication Protocols:
 •	Communication between clients and servers often relies on established protocols. The choice of protocol influences the behavior of the chat application.
 •	TCP (Transmission Control Protocol):
@@ -54,6 +84,43 @@ User authentication mechanisms are essential to ensure secure and authorized acc
 •	Socket Handling: The server manages incoming client connections using sockets, creating a separate thread or process for each connected client.
 •	User Management: Maintaining information about connected users, their status, and handling login/logout functionality.
 •	Message Routing: Implementing logic to route messages from one client to another, ensuring proper delivery.
+```
+
+import socket
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+server.bind(('localhost', 12345))
+
+server.listen(1)
+
+print("Server Started...")
+print("Waiting for Client...")
+
+client, address = server.accept()
+
+print("Client Connected:", address)
+
+while True:
+    message = client.recv(1024).decode()
+
+    if message.lower() == "exit":
+        print("Client Disconnected")
+        break
+
+    print("Client:", message)
+
+    reply = input("Server: ")
+
+    client.send(reply.encode())
+
+    if reply.lower() == "exit":
+        break
+
+client.close()
+server.close()
+
+```
 
 ## Considerations in Development:
 1.	Concurrency and Multithreading:
@@ -73,7 +140,26 @@ Client-server chat applications are versatile tools that facilitate real-time co
 
 Client-server chat applications are foundational to real-time communication over networks. They incorporate principles of socket programming, communication protocols, and security mechanisms to provide a seamless user experience. Understanding the basics of client-server chat applications is essential for developers involved in networked application development, as they form the backbone of various collaborative communication systems. As technology evolves, chat applications continue to adapt, incorporating new features and technologies to enhance user interaction and connectivity.
 
+## output
 
+Server terminal
+```
+
+Server Started...
+Waiting for Client...
+Client Connected: ('127.0.0.1', ...)
+Client: Hello
+Server: Hi
+
+```
+
+Client terminal
+```
+
+Connected to Server
+Client: Hello
+Server: Hi
+```
 ## Result:
 
 Thus the study on Client Server Chat Applications has been performed
